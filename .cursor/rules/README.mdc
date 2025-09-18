@@ -1,0 +1,158 @@
+---
+alwaysApply: false
+---
+
+# Profills Carton - Cursor Rules Documentation
+
+Este conjunto de regras foi criado baseado nas boas práticas implementadas na aplicação **Profills Carton**, especificamente após a refatoração realizada na funcionalidade de formulários e estrutura de componentes.
+
+## 📋 Regras Disponíveis
+
+### 🏗️ [Estrutura e Organização](mdc:project-structure.mdc)
+
+**Aplicação:** Sempre ativa
+**Cobertura:** Toda a aplicação
+
+- Estrutura de pastas Next.js App Router
+- Convenções de nomenclatura
+- Organização de componentes por página
+- Ordem de imports padrão
+
+### ⚛️ [Componentes React](mdc:react-components.mdc)
+
+**Aplicação:** Arquivos `*.tsx`
+
+- Estrutura de componentes React
+- Props e interfaces tipadas
+- Hooks e estado local
+- Event handlers e renderização condicional
+
+### 🔧 [Server Actions](mdc:server-actions.mdc)
+
+**Aplicação:** Arquivos em `lib/actions/*.ts`
+
+- Estrutura de server actions Next.js
+- Validação com Zod
+- Tratamento de erros padronizado
+- Tipos de retorno consistentes
+
+### 📝 [Formulários e Validação](mdc:forms-validation.mdc)
+
+**Aplicação:** Componentes com formulários
+
+- React Hook Form + Zod
+- Validação em tempo real
+- Estados de loading
+- Formatação de campos (ex: telefone)
+- Toast notifications
+
+### 🎣 [Hooks Customizados](mdc:custom-hooks.mdc)
+
+**Aplicação:** Arquivos `**/hooks/*.ts` e `use*.ts`
+
+- Estrutura de hooks customizados
+- Organização de retorno
+- Padrões comuns (modais, formulários, data fetching)
+- Tipagem de hooks
+
+### 🎨 [Estilização e UI](mdc:styling-ui.mdc)
+
+**Aplicação:** Arquivos `*.tsx` e `*.css`
+
+- Tailwind CSS + shadcn/ui
+- Utilitário `cn()` para classes
+- Design system e responsividade
+- Componentes customizados e animações
+
+### 📘 [TypeScript](mdc:typescript-patterns.mdc)
+
+**Aplicação:** Arquivos `*.ts` e `*.tsx`
+
+- Interfaces vs Types
+- Tipagem de props e estados
+- Padrões avançados (generics, conditional types)
+- Validação com Zod
+- Event handlers e refs tipados
+
+### 📦 [Imports e Exports](mdc:imports-exports.mdc)
+
+**Aplicação:** Arquivos `*.ts` e `*.tsx`
+
+- Ordem obrigatória de imports
+- Named vs default exports
+- Alias de importação
+- Barrel exports e performance
+
+### 🚀 [Next.js Patterns](mdc:nextjs-patterns.mdc)
+
+**Aplicação:** Arquivos em `app/**/*.tsx` e config Next.js
+
+- App Router estrutura
+- Server vs Client Components
+- Data fetching patterns
+- Metadata e SEO
+- Navegação e otimizações
+
+## 🎯 Implementação Base
+
+Esta documentação foi criada a partir da refatoração realizada que incluiu:
+
+### ✅ **Funcionalidades Implementadas:**
+
+- **React Hook Form** com validação Zod
+- **Server Actions** para processamento de formulários
+- **Componentização** modular e reutilizável
+- **Hooks customizados** para gerenciamento de estado
+- **TypeScript** tipagem forte em toda aplicação
+- **Tailwind CSS** com design system consistente
+- **Estrutura organizada** por páginas e responsabilidades
+
+### 📁 **Arquivos de Referência:**
+
+- [components/quote-modal.tsx](mdc:components/quote-modal.tsx) - Formulário completo com RHF + Zod
+- [lib/actions/formEmail.ts](mdc:lib/actions/formEmail.ts) - Server action padrão
+- [app/maquinas/hooks/useModals.ts](mdc:app/maquinas/hooks/useModals.ts) - Hook customizado
+- [app/maquinas/components/](mdc:app/maquinas/components/) - Componentes modulares
+- [app/maquinas/page.tsx](mdc:app/maquinas/page.tsx) - Página refatorada
+
+## 🔄 Workflow de Desenvolvimento
+
+### 1. **Novo Componente:**
+
+```tsx
+// Seguir structure em react-components.mdc
+// Tipagem completa com TypeScript
+// Usar componentes shadcn/ui
+// Implementar responsividade mobile-first
+```
+
+### 2. **Novo Formulário:**
+
+```tsx
+// React Hook Form + Zod (forms-validation.mdc)
+// Server action para processamento (server-actions.mdc)
+// Feedback visual com toast notifications
+// Estados de loading com useTransition
+```
+
+### 3. **Nova Página:**
+
+```tsx
+// Estrutura App Router (nextjs-patterns.mdc)
+// Componentes em pasta específica
+// Hooks customizados para lógica complexa
+// Import order seguindo imports-exports.mdc
+```
+
+## 🛠️ Tecnologias Base
+
+- **Next.js 15** (App Router)
+- **React 19** + TypeScript
+- **Tailwind CSS 4** + shadcn/ui
+- **React Hook Form** + Zod
+- **Sonner** (toast notifications)
+- **Lucide React** (ícones)
+
+---
+
+💡 **Dica:** Use essas regras como referência durante o desenvolvimento para manter consistência e qualidade do código em toda a aplicação.

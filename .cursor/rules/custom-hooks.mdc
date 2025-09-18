@@ -1,0 +1,171 @@
+---
+globs: **/hooks/*.ts,use*.ts
+---
+
+# Hooks Customizados - Padrões React
+
+## Estrutura de Hooks
+
+```tsx
+import { useState } from "react";
+
+export function useFeatureName() {
+  // 1. Estados internos
+  const [state, setState] = useState(initialValue);
+
+  // 2. Lógica interna
+  const internalFunction = () => {
+    // lógica
+  };
+
+  // 3. Handlers públicos
+  const publicHandler = () => {
+    internalFunction();
+    setState(newValue);
+  };
+
+  // 4. Return object organizado
+  return {
+    // Estados expostos
+    state,
+
+    // Handlers agrupados por contexto
+    feature: {
+      action1: publicHandler,
+      action2: anotherHandler,
+    },
+
+    // Utilitários
+    reset: () => setState(initialValue),
+  };
+}
+```
+
+## Regras de Implementação
+
+### 1. Nomenclatura
+
+- SEMPRE prefixe com `use` (ex: `useModals`, `useAuth`)
+- Use camelCase para o nome
+- Seja específico sobre a funcionalidade
+
+### 2. Organização de Retorno
+
+- Agrupe handlers relacionados em objetos
+- Exponha estados e handlers de forma intuitiva
+- Mantenha consistência entre hooks similares
+
+### 3. Tipagem
+
+```tsx
+interface UseModalReturn {
+  isOpen: boolean;
+  selectedItem: Item | null;
+  modal: {
+    open: (item: Item) => void;
+    close: () => void;
+  };
+}
+
+export function useModal(): UseModalReturn {
+  // implementação
+}
+```
+
+### 4. Localização
+
+- Hooks específicos de uma página: `app/[page]/hooks/`
+- Hooks globais/reutilizáveis: `hooks/` (raiz)
+- Um hook por arquivo
+
+## Padrões Comuns
+
+### Gerenciamento de Modais
+
+```tsx
+export function useModals() {
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  return {
+    // Estados
+    selectedItem,
+    isDialogOpen,
+
+    // Handlers agrupados
+    modal: {
+      open: (item: Item) => setSelectedItem(item),
+      close: () => setSelectedItem(null),
+    },
+    dialog: {
+      open: () => setIsDialogOpen(true),
+      close: () => setIsDialogOpen(false),
+    },
+  };
+}
+```
+
+### Gerenciamento de Formulários
+
+```tsx
+export function useFormState<T>() {
+  const [isPending, setIsPending] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const clearErrors = () => setErrors({});
+  const setFieldError = (field: string, message: string) => {
+    setErrors((prev) => ({ ...prev, [field]: message }));
+  };
+
+  return {
+    isPending,
+    errors,
+    form: {
+      start: () => setIsPending(true),
+      complete: () => setIsPending(false),
+      clearErrors,
+      setFieldError,
+    },
+  };
+}
+```
+
+### Data Fetching
+
+```tsx
+export function useData<T>(fetcher: () => Promise<T>) {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetch = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await fetcher();
+      setData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    data,
+    loading,
+    error,
+    actions: {
+      fetch,
+      reset: () => {
+        setData(null);
+        setError(null);
+      },
+    },
+  };
+}
+```
+
+## Exemplo de Referência
+
+Ver [useModals.ts](mdc:app/maquinas/hooks/useModals.ts) para implementação completa de hook para gerenciamento de múltiplos modais com handlers organizados.

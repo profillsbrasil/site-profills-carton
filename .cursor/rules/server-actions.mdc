@@ -1,0 +1,106 @@
+---
+globs: lib/actions/*.ts
+---
+
+# Server Actions - Padrões Next.js
+
+## Estrutura de Server Actions
+
+```tsx
+"use server";
+
+import { z } from "zod";
+
+// 1. Schema de validação
+const ActionSchema = z.object({
+  field1: z.string().min(1, "Campo obrigatório"),
+  field2: z.string().email("Email inválido"),
+  // ... outros campos
+});
+
+// 2. Type inference
+export type ActionData = z.infer<typeof ActionSchema>;
+
+// 3. Function implementation
+export async function actionName(data: ActionData) {
+  try {
+    // Validação
+    const validatedData = ActionSchema.parse(data);
+
+    // Lógica de negócio
+    // ...
+
+    // Retorno padronizado
+    return {
+      success: true,
+      message: "Operação realizada com sucesso!",
+      data: result, // opcional
+    };
+  } catch (error) {
+    console.error("Erro na action:", error);
+
+    // Tratamento de erro Zod
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        message: "Dados inválidos",
+        errors: error.issues,
+      };
+    }
+
+    // Erro genérico
+    return {
+      success: false,
+      message: "Erro interno do servidor",
+    };
+  }
+}
+```
+
+## Regras Obrigatórias
+
+### 1. Diretiva "use server"
+
+- SEMPRE inicie o arquivo com `"use server";`
+- Deve ser a primeira linha do arquivo
+
+### 2. Validação com Zod
+
+- SEMPRE valide dados de entrada com Zod
+- Defina schemas específicos e reutilizáveis
+- Use mensagens de erro em português
+- Exporte o tipo inferido do schema
+
+### 3. Tratamento de Erros
+
+- SEMPRE use try/catch
+- Trate erros do Zod separadamente
+- Log erros no console para debug
+- Retorne objetos padronizados com `success`, `message`
+
+### 4. Tipos de Retorno
+
+```tsx
+// Sucesso
+{ success: true, message: string, data?: any }
+
+// Erro de validação
+{ success: false, message: string, errors: ZodIssue[] }
+
+// Erro genérico
+{ success: false, message: string }
+```
+
+### 5. Nomenclatura
+
+- Use verbos para actions (ex: `submitForm`, `updateUser`)
+- Seja específico (ex: `submitQuoteForm` vs `submit`)
+
+### Exemplo de Referência
+
+Ver [formEmail.ts](mdc:lib/actions/formEmail.ts) para implementação completa com:
+
+- Validação completa cliente + servidor
+- Tratamento robusto de erros
+- Logging estruturado
+- Tipos TypeScript corretos
