@@ -1,0 +1,266 @@
+---
+globs: *.ts,*.tsx
+---
+
+# Importações e Exports - Organização e Padrões
+
+## Ordem de Importações
+
+### Estrutura Obrigatória
+
+```tsx
+// 1. React e Next.js
+import React from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+// 2. Bibliotecas externas (node_modules)
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+// 3. Componentes UI (@/components/ui/)
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+// 4. Componentes internos (@/components/)
+import { NavbarOutros } from "@/components/navbar-outros";
+import { QuoteModal } from "@/components/quote-modal";
+
+// 5. Hooks customizados
+import { useModals } from "./hooks/useModals";
+
+// 6. Utilitários e actions (@/lib/)
+import { cn } from "@/lib/utils";
+import { submitForm } from "@/lib/actions/formEmail";
+
+// 7. Tipos e interfaces
+import { type MachineData, type FormData } from "./types";
+
+// 8. Assets (imagens, ícones)
+import logo from "@/assets/image/logo.png";
+
+// 9. Imports relativos locais
+import { ComponenteLocal } from "./components/ComponenteLocal";
+import { localFunction } from "./utils";
+```
+
+### Agrupamento com Linha em Branco
+
+- Uma linha em branco entre cada grupo
+- Organize imports dentro do grupo por ordem alfabética
+- Use trailing comma em imports multi-linha
+
+## Padrões de Import
+
+### Named Imports
+
+```tsx
+// ✅ Preferred - named imports
+import { useState, useEffect, useCallback } from "react";
+import { Button, Card, Input } from "@/components/ui";
+
+// ❌ Avoid - default import when named available
+import React from "react"; // Não necessário para JSX no Next.js
+```
+
+### Type Imports
+
+```tsx
+// ✅ Type-only imports
+import { type ReactNode, type ComponentProps } from "react";
+import { type StaticImageData } from "next/image";
+import { type MachineData } from "./types";
+
+// ✅ Mixed imports
+import { useState, type Dispatch, type SetStateAction } from "react";
+```
+
+### Dynamic Imports
+
+```tsx
+// ✅ Para componentes pesados
+const HeavyComponent = dynamic(() => import("./HeavyComponent"), {
+  loading: () => <div>Carregando...</div>,
+  ssr: false, // Se necessário
+});
+
+// ✅ Para libs grandes
+const dynamicLib = await import("heavy-lib");
+```
+
+## Padrões de Export
+
+### Named Exports (Preferido)
+
+```tsx
+// ✅ Named exports para componentes
+export function ComponentName() {
+  return <div>Component</div>;
+}
+
+// ✅ Named exports para utilitários
+export const utility = () => {};
+export const CONSTANT = "value";
+
+// ✅ Named exports para tipos
+export interface ComponentProps {}
+export type FormData = {};
+```
+
+### Default Exports (Casos Específicos)
+
+```tsx
+// ✅ Páginas Next.js (obrigatório)
+export default function Page() {
+  return <div>Page</div>;
+}
+
+// ✅ Layouts Next.js
+export default function Layout({ children }: { children: ReactNode }) {
+  return <div>{children}</div>;
+}
+
+// ✅ Configurações
+export default {
+  apiUrl: process.env.API_URL,
+  timeout: 5000,
+};
+```
+
+### Re-exports
+
+```tsx
+// ✅ components/ui/index.ts
+export { Button } from "./button";
+export { Card, CardContent, CardHeader } from "./card";
+export { Input } from "./input";
+
+// ✅ Re-export com renomeação
+export { Dialog as Modal } from "./dialog";
+
+// ✅ Re-export types
+export type { ButtonProps } from "./button";
+```
+
+## Alias de Importação
+
+### Configuração (já definida)
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"],
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["lib/*"],
+      "@/assets/*": ["assets/*"]
+    }
+  }
+}
+```
+
+### Uso dos Alias
+
+```tsx
+// ✅ Use aliases para imports absolutos
+import { Button } from "@/components/ui/button";
+import { submitForm } from "@/lib/actions/formEmail";
+import logo from "@/assets/image/logo.png";
+
+// ❌ Evite imports relativos longos
+import { Button } from "../../../components/ui/button";
+```
+
+## Barrel Exports
+
+### Quando Usar
+
+```tsx
+// ✅ components/ui/index.ts - Agrupar componentes relacionados
+export { Button } from "./button";
+export { Card, CardHeader, CardContent } from "./card";
+
+// ✅ lib/index.ts - Agrupar utilitários
+export { cn } from "./utils";
+export { formatDate, formatCurrency } from "./formatters";
+
+// ✅ types/index.ts - Agrupar tipos
+export type { User, UserProps } from "./user";
+export type { ApiResponse } from "./api";
+```
+
+### Quando Evitar
+
+```tsx
+// ❌ Não crie barrels desnecessários para arquivos únicos
+// Se só tem um arquivo, importe diretamente
+
+// ❌ Não re-exporte tudo automaticamente
+export * from "./everything"; // Pode causar problemas de bundle
+```
+
+## Imports Condicionais
+
+### Client vs Server
+
+```tsx
+// ✅ Client-only imports
+"use client";
+import { useState } from "react";
+import { toast } from "sonner";
+
+// ✅ Server-only imports
+("use server");
+import { prisma } from "@/lib/prisma";
+import { authenticate } from "@/lib/auth";
+```
+
+### Environment-specific
+
+```tsx
+// ✅ Imports condicionais por ambiente
+if (process.env.NODE_ENV === "development") {
+  import("@/lib/devtools").then(({ setupDevtools }) => {
+    setupDevtools();
+  });
+}
+```
+
+## Performance
+
+### Bundle Splitting
+
+```tsx
+// ✅ Import apenas o que precisa
+import { debounce } from "lodash/debounce"; // Específico
+// ❌ import { debounce } from "lodash"; // Whole library
+
+// ✅ Tree-shaking friendly
+import { Button } from "@/components/ui/button";
+// ❌ import { Button } from "@/components/ui"; // Se barrel for pesado
+```
+
+### Lazy Loading
+
+```tsx
+// ✅ Para componentes não críticos
+const LazyModal = lazy(() => import("@/components/Modal"));
+const LazyChart = lazy(() => import("@/components/Chart"));
+
+// Uso com Suspense
+<Suspense fallback={<div>Carregando...</div>}>
+  <LazyModal />
+</Suspense>;
+```
+
+## Exemplo de Arquivo Bem Estruturado
+
+Ver [quote-modal.tsx](mdc:components/quote-modal.tsx) para exemplo completo de:
+
+- Ordem correta de imports
+- Uso de type imports
+- Named exports
+- Organização por grupos

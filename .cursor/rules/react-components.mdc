@@ -1,0 +1,75 @@
+---
+globs: *.tsx
+---
+
+# Componentes React - Boas Práticas
+
+## Estrutura de Componentes
+
+```tsx
+"use client"; // Apenas se necessário (client components)
+
+import React from "react"; // Apenas se usar JSX sem Next.js
+import { useState } from "react"; // Hooks específicos
+// ... outras importações
+
+interface ComponentProps {
+  // Props tipadas
+}
+
+export function ComponentName({ prop1, prop2 }: ComponentProps) {
+  // 1. Hooks no topo
+  const [state, setState] = useState();
+
+  // 2. Funções de handler
+  const handleClick = () => {
+    // lógica
+  };
+
+  // 3. Early returns
+  if (!data) return null;
+
+  // 4. JSX
+  return <div className="classes">{/* componente */}</div>;
+}
+
+// Export default apenas para páginas
+export default ComponentName; // Apenas em page.tsx
+```
+
+## Regras de Implementação
+
+### Props e Interfaces
+
+- SEMPRE tipie props com interfaces
+- Use `interface` ao invés de `type` para props
+- Prefira destructuring nas props
+- Use `React.ComponentProps<"element">` para estender elementos HTML
+
+### Estado e Hooks
+
+- Use `useState` para estado local simples
+- Crie hooks customizados para lógica complexa
+- Coloque hooks sempre no topo do componente
+- Use `useTransition` para operações assíncronas
+
+### Event Handlers
+
+- Prefixe com `handle` (ex: `handleSubmit`)
+- Use arrow functions para handlers simples
+- Extraia lógica complexa para funções separadas
+
+### Renderização Condicional
+
+- Use early returns para casos de loading/erro
+- Prefira `&&` para renderização condicional simples
+- Use ternário apenas para escolha entre dois elementos
+
+### Exemplo de Referência
+
+Ver [quote-modal.tsx](mdc:components/quote-modal.tsx) para implementação completa com:
+
+- React Hook Form + Zod validation
+- useTransition para estados de loading
+- Tipagem correta de props e interfaces
+- Organização limpa de imports

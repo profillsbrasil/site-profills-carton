@@ -1,0 +1,375 @@
+---
+globs: app/**/*.tsx,next.config.*
+---
+
+# Next.js App Router - Padrões e Convenções
+
+## Estrutura de Arquivos App Router
+
+### Convenções de Nomenclatura
+
+```
+app/
+├── layout.tsx          # Layout raiz (obrigatório)
+├── page.tsx           # Página inicial (/)
+├── globals.css        # Estilos globais
+├── loading.tsx        # Loading UI
+├── error.tsx          # Error UI
+├── not-found.tsx      # 404 UI
+└── [feature]/
+    ├── page.tsx       # Página da feature (/feature)
+    ├── layout.tsx     # Layout da feature
+    ├── loading.tsx    # Loading específico
+    ├── components/    # Componentes da feature
+    ├── hooks/         # Hooks da feature
+    └── data/          # Dados/constantes
+```
+
+### Tipos de Arquivo Especiais
+
+```tsx
+// ✅ page.tsx - Páginas exportam default
+export default function PageName() {
+  return <div>Page content</div>;
+}
+
+// ✅ layout.tsx - Layouts recebem children
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      <nav>Navigation</nav>
+      {children}
+    </div>
+  );
+}
+
+// ✅ loading.tsx - Loading UI
+export default function Loading() {
+  return <div>Carregando...</div>;
+}
+
+// ✅ error.tsx - Error boundaries
+("use client");
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return (
+    <div>
+      <h2>Algo deu errado!</h2>
+      <button onClick={() => reset()}>Tentar novamente</button>
+    </div>
+  );
+}
+```
+
+## Client vs Server Components
+
+### Server Components (Padrão)
+
+```tsx
+// ✅ Server Component - sem "use client"
+import { prisma } from "@/lib/prisma";
+
+export default async function ServerPage() {
+  // ✅ Pode fazer fetch de dados diretamente
+  const data = await prisma.user.findMany();
+
+  return (
+    <div>
+      {data.map((user) => (
+        <div key={user.id}>{user.name}</div>
+      ))}
+    </div>
+  );
+}
+
+// ✅ Vantagens:
+// - SEO melhor
+// - Performance melhor
+// - Acesso direto ao banco/APIs
+// - Bundle menor
+```
+
+### Client Components
+
+```tsx
+// ✅ Client Component - com "use client"
+"use client";
+
+import { useState } from "react";
+
+export default function ClientComponent() {
+  // ✅ Pode usar hooks
+  const [count, setCount] = useState(0);
+
+  // ✅ Pode usar event handlers
+  const handleClick = () => setCount((c) => c + 1);
+
+  return <button onClick={handleClick}>Count: {count}</button>;
+}
+
+// ✅ Use quando precisar de:
+// - useState, useEffect, outros hooks
+// - Event handlers
+// - Browser APIs (localStorage, etc)
+// - Interatividade
+```
+
+### Boundary Pattern
+
+```tsx
+// ✅ Server component como container
+export default function PageContainer() {
+  // Server-side data fetching
+  const data = await fetchData();
+
+  return (
+    <div>
+      <h1>Title (Server)</h1>
+      {/* Client component para interatividade */}
+      <InteractiveSection data={data} />
+    </div>
+  );
+}
+
+// ✅ Client component para interatividade
+("use client");
+function InteractiveSection({ data }: { data: any }) {
+  const [selected, setSelected] = useState(null);
+
+  return (
+    <div>
+      {data.map((item) => (
+        <button key={item.id} onClick={() => setSelected(item)}>
+          {item.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+## Data Fetching
+
+### Server Components
+
+```tsx
+// ✅ Fetch direto em server components
+export default async function Page() {
+  // ✅ Parallel fetching
+  const [users, posts] = await Promise.all([
+    fetch("/api/users").then((res) => res.json()),
+    fetch("/api/posts").then((res) => res.json()),
+  ]);
+
+  return (
+    <div>
+      <UserList users={users} />
+      <PostList posts={posts} />
+    </div>
+  );
+}
+
+// ✅ With error handling
+export default async function Page() {
+  try {
+    const data = await fetchData();
+    return <DataComponent data={data} />;
+  } catch (error) {
+    return <div>Erro ao carregar dados</div>;
+  }
+}
+```
+
+### Client Components
+
+```tsx
+// ✅ Use SWR ou React Query para client fetching
+"use client";
+
+import useSWR from "swr";
+
+export default function ClientDataComponent() {
+  const { data, error, isLoading } = useSWR("/api/data", fetcher);
+
+  if (error) return <div>Erro</div>;
+  if (isLoading) return <div>Carregando...</div>;
+
+  return <div>{data.content}</div>;
+}
+```
+
+## Server Actions
+
+### Implementação
+
+```tsx
+// ✅ lib/actions/user.ts
+"use server";
+
+import { z } from "zod";
+import { redirect } from "next/navigation";
+
+const CreateUserSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+});
+
+export async function createUser(formData: FormData) {
+  const validatedFields = CreateUserSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  // Criar usuário
+  await prisma.user.create({
+    data: validatedFields.data,
+  });
+
+  redirect("/users");
+}
+```
+
+### Uso em Formulários
+
+```tsx
+// ✅ Com server action
+import { createUser } from "@/lib/actions/user";
+
+export default function UserForm() {
+  return (
+    <form action={createUser}>
+      <input name="name" placeholder="Nome" required />
+      <input name="email" type="email" placeholder="Email" required />
+      <button type="submit">Criar Usuário</button>
+    </form>
+  );
+}
+```
+
+## Metadata e SEO
+
+### Static Metadata
+
+```tsx
+// ✅ page.tsx ou layout.tsx
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Página Título",
+  description: "Descrição da página",
+  keywords: ["nextjs", "react"],
+  openGraph: {
+    title: "Página Título",
+    description: "Descrição da página",
+    images: ["/og-image.jpg"],
+  },
+};
+
+export default function Page() {
+  return <div>Content</div>;
+}
+```
+
+### Dynamic Metadata
+
+```tsx
+// ✅ Metadata dinâmica
+interface Props {
+  params: { id: string };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const product = await fetchProduct(params.id);
+
+  return {
+    title: product.name,
+    description: product.description,
+    openGraph: {
+      images: [product.image],
+    },
+  };
+}
+
+export default function ProductPage({ params }: Props) {
+  // component
+}
+```
+
+## Navegação
+
+### Links
+
+```tsx
+import Link from "next/link";
+
+// ✅ Internal navigation
+<Link href="/about">Sobre</Link>
+<Link href={`/product/${product.id}`}>Ver Produto</Link>
+
+// ✅ External links
+<Link href="https://external.com" target="_blank" rel="noopener noreferrer">
+  Link Externo
+</Link>
+```
+
+### Programmatic Navigation
+
+```tsx
+"use client";
+
+import { useRouter } from "next/navigation";
+
+export default function Component() {
+  const router = useRouter();
+
+  const handleSubmit = () => {
+    // Lógica de submit
+    router.push("/success");
+  };
+
+  return <button onClick={handleSubmit}>Submit</button>;
+}
+```
+
+## Images
+
+```tsx
+import Image from "next/image";
+
+// ✅ Local images (import)
+import logo from "@/assets/logo.png";
+<Image src={logo} alt="Logo" />
+
+// ✅ External images (string)
+<Image
+  src="/api/image.jpg"
+  alt="Description"
+  width={500}
+  height={300}
+  // ✅ Optimization
+  priority // Para LCP
+  placeholder="blur"
+  blurDataURL="data:image/jpeg;base64,..."
+/>
+```
+
+## Exemplo de Estrutura Completa
+
+Ver arquivos de referência:
+
+- [app/layout.tsx](mdc:app/layout.tsx) - Layout raiz configurado
+- [app/page.tsx](mdc:app/page.tsx) - Página inicial
+- [app/maquinas/page.tsx](mdc:app/maquinas/page.tsx) - Página complexa organizada
+- [lib/actions/formEmail.ts](mdc:lib/actions/formEmail.ts) - Server action implementada

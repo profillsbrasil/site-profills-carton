@@ -1,0 +1,159 @@
+---
+globs: *.tsx
+description: Rules for React Hook Form and validation patterns
+---
+
+# Formulários e Validação
+
+## React Hook Form + Zod
+
+Use SEMPRE esta combinação para formulários:
+
+```tsx
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+// 1. Schema de validação
+const formSchema = z.object({
+  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  email: z.string().email("Email inválido"),
+  phone: z.string().min(10, "Telefone inválido"),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+// 2. Setup do formulário
+const form = useForm<FormValues>({
+  resolver: zodResolver(formSchema),
+  defaultValues: {
+    name: "",
+    email: "",
+    phone: "",
+  },
+});
+
+// 3. Submit handler
+const onSubmit = async (values: FormValues) => {
+  // Lógica de envio
+};
+
+// 4. JSX com componentes Form
+<Form {...form}>
+  <form onSubmit={form.handleSubmit(onSubmit)}>
+    <FormField
+      control={form.control}
+      name="name"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Nome *</FormLabel>
+          <FormControl>
+            <Input placeholder="Seu nome" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  </form>
+</Form>;
+```
+
+## Padrões de Validação
+
+### Mensagens em Português
+
+```tsx
+const validationSchema = z.object({
+  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  email: z.string().email("Email inválido"),
+  phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
+  cpf: z.string().regex(/^\d{11}$/, "CPF deve ter 11 dígitos"),
+});
+```
+
+### Campos Opcionais
+
+```tsx
+company: z.string().optional(),
+message: z.string().optional(),
+```
+
+### Validação Customizada
+
+```tsx
+phone: z.string()
+  .min(10, "Telefone muito curto")
+  .transform((val) => val.replace(/\D/g, "")) // Remove não-dígitos
+  .refine((val) => val.length >= 10, "Telefone inválido"),
+```
+
+## Estados de Loading
+
+### Use useTransition para Server Actions
+
+```tsx
+import { useTransition } from "react";
+
+const [isPending, startTransition] = useTransition();
+
+const onSubmit = async (values: FormValues) => {
+  startTransition(async () => {
+    const result = await serverAction(values);
+    // handle result
+  });
+};
+
+// No botão
+<Button type="submit" disabled={isPending}>
+  {isPending ? "Enviando..." : "Enviar"}
+</Button>;
+```
+
+## Formatação de Campos
+
+### Telefone Brasileiro
+
+```tsx
+const formatPhoneNumber = (value: string): string => {
+  const cleaned = value.replace(/\D/g, "");
+  const truncated = cleaned.substring(0, 11);
+
+  if (truncated.length <= 2) return `(${truncated}`;
+  if (truncated.length <= 7) {
+    return `(${truncated.substring(0, 2)}) ${truncated.substring(2)}`;
+  }
+  return `(${truncated.substring(0, 2)}) ${truncated.substring(2, 7)}-${truncated.substring(7)}`;
+};
+
+// No campo
+onChange={(e) => {
+  const formatted = formatPhoneNumber(e.target.value);
+  field.onChange(formatted);
+}}
+```
+
+## Feedback Visual
+
+### Toast Notifications
+
+```tsx
+import { toast } from "sonner";
+
+// Sucesso
+toast.success("Formulário enviado com sucesso!");
+
+// Erro
+toast.error("Erro ao enviar formulário");
+```
+
+### Exemplo Completo
+
+Ver [quote-modal.tsx](mdc:components/quote-modal.tsx) para implementação de referência.

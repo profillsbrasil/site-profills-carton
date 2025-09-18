@@ -1,0 +1,270 @@
+---
+globs: *.ts,*.tsx
+---
+
+# TypeScript - Padrões e Boas Práticas
+
+## Definição de Tipos
+
+### Interfaces vs Types
+
+```tsx
+// ✅ Use interface para objetos e props
+interface UserProps {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// ✅ Use type para unions, primitivos e computed types
+type Status = "pending" | "approved" | "rejected";
+type UserWithStatus = User & { status: Status };
+```
+
+### Nomenclatura
+
+```tsx
+// ✅ Interfaces: PascalCase
+interface MachineData { }
+interface ComponentProps { }
+
+// ✅ Types: PascalCase
+type FormValues = z.infer<typeof schema>;
+type ApiResponse<T> = { data: T; success: boolean };
+
+// ✅ Enums/Constants: SCREAMING_SNAKE_CASE
+const MACHINE_CATEGORIES = [...] as const;
+type MachineCategory = typeof MACHINE_CATEGORIES[number]["id"];
+```
+
+### Tipagem de Props
+
+```tsx
+// ✅ Props de componentes
+interface ButtonProps extends React.ComponentProps<"button"> {
+  variant?: "primary" | "secondary";
+  isLoading?: boolean;
+}
+
+// ✅ Ref forwarding
+interface InputProps extends React.ComponentProps<"input"> {
+  label: string;
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ label, className, ...props }, ref) => {
+    return (
+      <div>
+        <label>{label}</label>
+        <input ref={ref} className={cn("...", className)} {...props} />
+      </div>
+    );
+  },
+);
+```
+
+### Tipagem de Estados
+
+```tsx
+// ✅ Estados tipados
+const [user, setUser] = useState<User | null>(null);
+const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
+  "idle",
+);
+
+// ✅ Estados complexos
+interface FormState {
+  data: FormData;
+  errors: Record<string, string>;
+  isSubmitting: boolean;
+}
+
+const [formState, setFormState] = useState<FormState>({
+  data: {},
+  errors: {},
+  isSubmitting: false,
+});
+```
+
+## Padrões Avançados
+
+### Generic Types
+
+```tsx
+// ✅ Hooks genéricos
+interface UseApiReturn<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
+
+function useApi<T>(url: string): UseApiReturn<T> {
+  // implementação
+}
+
+// ✅ Componentes genéricos
+interface ListProps<T> {
+  items: T[];
+  renderItem: (item: T) => React.ReactNode;
+  keyExtractor: (item: T) => string;
+}
+
+function List<T>({ items, renderItem, keyExtractor }: ListProps<T>) {
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={keyExtractor(item)}>{renderItem(item)}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### Conditional Types
+
+```tsx
+// ✅ Tipos condicionais para diferentes estados
+type ButtonProps<T extends "button" | "link"> = T extends "button"
+  ? React.ComponentProps<"button"> & { href?: never }
+  : React.ComponentProps<"a"> & { href: string };
+
+function Button<T extends "button" | "link">(
+  props: ButtonProps<T> & { as: T },
+) {
+  // implementação
+}
+```
+
+### Utility Types
+
+```tsx
+// ✅ Pick para subsets de interfaces
+type UserCreateData = Pick<User, "name" | "email">;
+type UserUpdateData = Partial<Pick<User, "name" | "email">>;
+
+// ✅ Omit para excluir propriedades
+type PublicUser = Omit<User, "password" | "internalId">;
+
+// ✅ Record para objetos dinâmicos
+type FormErrors = Record<string, string>;
+type ApiEndpoints = Record<"users" | "posts" | "comments", string>;
+```
+
+## Validação com Zod
+
+### Schema Definition
+
+```tsx
+import { z } from "zod";
+
+// ✅ Schemas reutilizáveis
+const UserSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(2, "Nome muito curto"),
+  email: z.string().email("Email inválido"),
+  age: z.number().min(18, "Deve ser maior de idade").optional(),
+});
+
+// ✅ Type inference
+type User = z.infer<typeof UserSchema>;
+
+// ✅ Validation methods
+const validateUser = (data: unknown): User => {
+  return UserSchema.parse(data); // Throws on error
+};
+
+const safeValidateUser = (data: unknown) => {
+  return UserSchema.safeParse(data); // Returns success/error object
+};
+```
+
+### Esquemas Compostos
+
+```tsx
+// ✅ Extend schemas
+const AdminUserSchema = UserSchema.extend({
+  role: z.literal("admin"),
+  permissions: z.array(z.string()),
+});
+
+// ✅ Union schemas
+const ResponseSchema = z.union([
+  z.object({ success: z.literal(true), data: z.any() }),
+  z.object({ success: z.literal(false), error: z.string() }),
+]);
+```
+
+## Event Handlers e Refs
+
+### Event Handlers Tipados
+
+```tsx
+// ✅ Event handlers específicos
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setValue(e.target.value);
+};
+
+const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  // lógica
+};
+
+const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  // lógica
+};
+```
+
+### Refs Tipados
+
+```tsx
+// ✅ Refs para elementos específicos
+const inputRef = useRef<HTMLInputElement>(null);
+const divRef = useRef<HTMLDivElement>(null);
+
+// ✅ Refs para componentes
+const modalRef = useRef<ModalHandle>(null);
+```
+
+## Arquivos de Tipo
+
+### Organização
+
+```
+types/
+├── api.ts          # Tipos de API
+├── components.ts   # Props de componentes
+├── forms.ts        # Tipos de formulários
+└── global.ts       # Tipos globais
+```
+
+### Exports
+
+```tsx
+// ✅ types/api.ts
+export interface ApiResponse<T> {
+  data: T;
+  success: boolean;
+  message?: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// ✅ types/forms.ts
+export interface FormField {
+  name: string;
+  label: string;
+  required?: boolean;
+}
+```
+
+## Exemplo de Referência
+
+Ver implementação em:
+
+- [quote-modal.tsx](mdc:components/quote-modal.tsx) - Interfaces complexas e tipagem Zod
+- [useModals.ts](mdc:app/maquinas/hooks/useModals.ts) - Hook tipado com retorno estruturado
+- [formEmail.ts](mdc:lib/actions/formEmail.ts) - Server action com validação Zod

@@ -1,0 +1,53 @@
+---
+alwaysApply: true
+---
+
+# Estrutura e Organização do Projeto
+
+## Estrutura de Pastas
+
+- `app/` - Next.js App Router com páginas e layouts
+- `components/` - Componentes React reutilizáveis globais
+- `components/ui/` - Componentes base (shadcn/ui)
+- `lib/` - Utilitários, actions e configurações
+- `lib/actions/` - Server Actions do Next.js
+- `assets/` - Imagens e recursos estáticos
+
+## Organização por Página
+
+Para páginas complexas, use a estrutura:
+
+```
+app/[page]/
+├── page.tsx          # Página principal
+├── components/        # Componentes específicos da página
+├── hooks/            # Hooks customizados da página
+├── data/             # Dados e constantes
+└── utils/            # Utilitários específicos
+```
+
+## Convenções de Nomenclatura
+
+- **Arquivos**: kebab-case (ex: `hero-section.tsx`)
+- **Componentes**: PascalCase (ex: `HeroSection`)
+- **Hooks**: camelCase com prefixo `use` (ex: `useModals`)
+- **Types/Interfaces**: PascalCase (ex: `MachineData`)
+- **Constants**: SCREAMING_SNAKE_CASE (ex: `MACHINE_CATEGORIES`)
+
+## Imports Order
+
+1. React e Next.js
+2. Bibliotecas externas
+3. Componentes UI (@/components/ui)
+4. Componentes internos (@/components)
+5. Hooks customizados
+6. Utilitários e actions
+7. Tipos e interfaces
+8. Assets (imagens, ícones)
+
+## Principais arquivos:
+
+- [layout.tsx](mdc:app/layout.tsx) - Layout raiz
+- [globals.css](mdc:app/globals.css) - Estilos globais
+- [components.json](mdc:components.json) - Configuração shadcn/ui
+- [utils.ts](mdc:lib/utils.ts) - Utilitário cn() para classes CSS

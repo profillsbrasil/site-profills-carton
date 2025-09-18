@@ -1,0 +1,212 @@
+---
+globs: *.tsx,*.css
+---
+
+# Estilização e UI - Tailwind CSS + shadcn/ui
+
+## Padrões de Estilização
+
+### 1. Uso do utilitário cn()
+
+```tsx
+import { cn } from "@/lib/utils";
+
+// SEMPRE use cn() para combinar classes
+<div className={cn(
+  "base-classes here",
+  conditionalClass && "conditional-class",
+  className // props de className
+)} />
+
+// NÃO use concatenação manual
+<div className={`base-class ${condition ? 'active' : ''}`} /> // ❌
+```
+
+### 2. Componentes shadcn/ui
+
+```tsx
+// Importe de @/components/ui/
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+// Use variants quando disponíveis
+<Button variant="outline" size="lg">
+  Texto do Botão
+</Button>;
+```
+
+### 3. Design System
+
+#### Cores (use classes, não hex)
+
+```tsx
+// ✅ Correto - use classes do design system
+className = "bg-primary text-primary-foreground";
+className = "text-muted-foreground";
+className = "border-primary/20";
+
+// ❌ Evite - cores hardcoded
+className = "bg-blue-500 text-white";
+```
+
+#### Espaçamento Consistente
+
+```tsx
+// Use scale padrão do Tailwind
+className = "p-4 md:p-6"; // padding responsivo
+className = "gap-4 md:gap-8"; // gaps consistentes
+className = "space-y-4 md:space-y-6"; // espaçamento vertical
+```
+
+#### Responsividade - Mobile First
+
+```tsx
+// SEMPRE mobile first com breakpoint md:
+className = "text-sm md:text-base"; // texto responsivo
+className = "grid grid-cols-1 md:grid-cols-3"; // layout responsivo
+className = "hidden md:block"; // visibilidade responsiva
+```
+
+### 4. Estados Interativos
+
+```tsx
+// Hover, focus e active states
+className="hover:bg-primary/10 focus:ring-2 focus:ring-primary/20 active:scale-95"
+
+// Estados de loading/disabled
+className={cn(
+  "transition-all",
+  isPending && "opacity-50 cursor-not-allowed",
+  !isPending && "hover:shadow-lg"
+)}
+```
+
+## Componentes Customizados
+
+### Extend shadcn/ui components
+
+```tsx
+interface CustomButtonProps extends React.ComponentProps<typeof Button> {
+  isLoading?: boolean;
+}
+
+export function CustomButton({
+  isLoading,
+  children,
+  ...props
+}: CustomButtonProps) {
+  return (
+    <Button {...props} disabled={isLoading || props.disabled}>
+      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+      {children}
+    </Button>
+  );
+}
+```
+
+### Compound Components
+
+```tsx
+function FeatureCard({ children, className, ...props }: CardProps) {
+  return (
+    <Card
+      className={cn("transition-shadow hover:shadow-lg", className)}
+      {...props}
+    >
+      {children}
+    </Card>
+  );
+}
+
+FeatureCard.Header = function FeatureCardHeader({
+  children,
+  ...props
+}: CardHeaderProps) {
+  return (
+    <CardHeader className="border-b" {...props}>
+      {children}
+    </CardHeader>
+  );
+};
+
+// Uso:
+<FeatureCard>
+  <FeatureCard.Header>
+    <CardTitle>Título</CardTitle>
+  </FeatureCard.Header>
+  <CardContent>Conteúdo</CardContent>
+</FeatureCard>;
+```
+
+## Layout Patterns
+
+### Container Pattern
+
+```tsx
+<div className="mx-auto w-full max-w-7xl px-4 md:px-8">{/* Conteúdo */}</div>
+```
+
+### Grid Responsivo
+
+```tsx
+<div className="grid gap-4 md:grid-cols-4 md:gap-8">
+  <div className="md:col-span-1"> {/* Sidebar */} </div>
+  <div className="md:col-span-3"> {/* Main content */} </div>
+</div>
+```
+
+### Flexbox Utilities
+
+```tsx
+<div className="flex items-center justify-between">
+<div className="flex flex-col gap-2 md:flex-row md:items-center">
+```
+
+## Animações
+
+### Transitions
+
+```tsx
+className = "transition-all duration-300";
+className = "hover:scale-105 transition-transform";
+```
+
+### Loading States
+
+```tsx
+// Skeleton loading
+<div className="animate-pulse bg-muted rounded h-4 w-32" />
+
+// Spinner
+<Loader2 className="h-4 w-4 animate-spin" />
+```
+
+## CSS Globais
+
+### Use apenas para:
+
+- Reset/normalize styles
+- Variáveis CSS customizadas
+- Animações complexas
+- Estilos de terceiros
+
+### Em [globals.css](mdc:app/globals.css):
+
+```css
+/* Variáveis customizadas */
+:root {
+  --sidebar-width: 280px;
+}
+
+/* Utilities específicas do projeto */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+```
+
+## Exemplos de Referência
+
+- [TechnicalMachineCard.tsx](mdc:app/maquinas/components/TechnicalMachineCard.tsx) - Card complexo responsivo
+- [quote-modal.tsx](mdc:components/quote-modal.tsx) - Modal com formulário estilizado
+- [button.tsx](mdc:components/ui/button.tsx) - Componente base com variants
