@@ -215,7 +215,7 @@ const ProductCard = ({ product }: { product: ProductData }) => {
             <div className="pt-6 md:pt-8">
               <Link href={`/maquinas#${product.id}`} className="block">
                 <Button className="group/btn bg-primary hover:bg-primary/90 w-full rounded-md px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl md:px-8 md:py-4 md:text-base">
-                  Ver Página Completa
+                  Ver Mais Detalhes
                   <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1 md:h-5 md:w-5" />
                 </Button>
               </Link>
@@ -330,7 +330,7 @@ export default function ProductsSection() {
                   <div className="flex justify-center pt-2">
                     <Link href="/maquinas" className="w-full">
                       <Button className="bg-primary hover:bg-primary/90 text-primary-foreground group w-full rounded-md border-0 px-6 py-3 text-base font-bold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl md:px-8 md:py-4 md:text-lg">
-                        Conhecer Linha Completa
+                        Conhecer Linha
                         <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 md:ml-3 md:h-5 md:w-5" />
                       </Button>
                     </Link>
