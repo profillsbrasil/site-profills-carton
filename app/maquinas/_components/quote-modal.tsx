@@ -35,13 +35,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -333,39 +326,23 @@ export function QuoteModal({ machine, isOpen, onClose }: QuoteModalProps) {
                   </AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-3 md:space-y-4">
-                      {/* Carrossel de Embalagens - Otimizado */}
-                      <Carousel
-                        opts={{ align: "start", loop: true }}
-                        className="w-full"
-                      >
-                        <CarouselContent>
-                          {Array.from({ length: 4 }, (_, index) => (
-                            <CarouselItem
-                              key={index}
-                              className="basis-1/2 md:basis-1/4"
-                            >
-                              <div className="bg-muted/30 relative aspect-square overflow-hidden rounded-md p-2 md:p-4">
-                                <div className="flex h-full items-center justify-center">
-                                  <Image
-                                    src={machine.productImage}
-                                    alt={`Embalagem ${index + 1}`}
-                                    fill
-                                    className="object-contain transition-transform duration-300 hover:scale-110"
-                                  />
-                                </div>
-                                <Badge
-                                  className="absolute top-1 right-1 text-xs md:top-2 md:right-2"
-                                  variant="outline"
-                                >
-                                  {index + 1}/4
-                                </Badge>
-                              </div>
-                            </CarouselItem>
-                          ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="hidden md:flex" />
-                        <CarouselNext className="hidden md:flex" />
-                      </Carousel>
+                      {/* Imagem única do produto */}
+                      <div className="bg-muted/30 relative overflow-hidden rounded-md p-4 md:p-6">
+                        <div className="flex h-full items-center justify-center">
+                          <Image
+                            src={machine.productImage}
+                            alt={`Produto ${machine.title}`}
+
+                            className="object-contain w-1/3 transition-transform duration-300 hover:scale-105"
+                          />
+                        </div>
+                        <Badge
+                          className="absolute top-3 right-3 text-xs"
+                          variant="outline"
+                        >
+                          Produto
+                        </Badge>
+                      </div>
                     </div>
                   </AccordionContent>
                 </AccordionItem>

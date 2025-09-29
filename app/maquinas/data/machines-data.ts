@@ -41,6 +41,8 @@ export interface MachineData {
   applications: string[];
 }
 
+
+
 export const machinesData: MachineData[] = [
   {
     id: "speed-line",

@@ -23,13 +23,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { NumberTicker } from "@/components/magicui/number-ticker";
 import { type MachineData } from "../data/machines-data";
 
@@ -114,15 +107,10 @@ export function TechnicalMachineCard({
   const processedData = useMemo(() => {
     const footprintValue = machine.footprint.split(" ")[0];
     const limitedHighlights = machine.highlights.slice(0, 4);
-    const packageExamples = Array.from({ length: 3 }, (_, index) => ({
-      id: `package-${index}`,
-      index: index + 1,
-    }));
 
     return {
       footprintValue,
       limitedHighlights,
-      packageExamples,
     };
   }, [machine.footprint, machine.highlights]);
   return (
@@ -278,41 +266,25 @@ export function TechnicalMachineCard({
               value="packaging"
               className="mt-4 space-y-3 md:mt-6 md:space-y-4"
             >
-              {/* Carrossel de produtos */}
-              <Carousel
-                opts={{ align: "start", loop: true }}
-                className="w-full"
-              >
-                <CarouselContent>
-                  {processedData.packageExamples.map((example) => (
-                    <CarouselItem
-                      key={example.id}
-                      className="basis-4/5 md:basis-1/3"
-                    >
-                      <div className="bg-muted/50 relative aspect-square overflow-hidden rounded-md p-3 md:p-6">
-                        <div className="flex h-full items-center justify-center">
-                          <Image
-                            src={machine.productImage}
-                            alt={`Produto ${example.index}`}
-                            loading="lazy"
-                            className="h-full w-auto object-contain transition-transform duration-300 hover:scale-110"
-                          />
-                        </div>
-                        <Badge
-                          className="absolute top-2 right-2 text-xs md:top-3 md:right-3"
-                          variant="outline"
-                        >
-                          {example.index}/3
-                        </Badge>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="hidden md:flex" />
-                <CarouselNext className="hidden md:flex" />
-              </Carousel>
+              {/* Imagem única do produto */}
+              <div className="bg-muted/50 relative overflow-hidden rounded-md p-4 md:p-6">
+                <div className="flex h-full items-center justify-center">
+                  <Image
+                    src={machine.productImage}
+                    alt={`Produto ${machine.title}`}
+                    loading="lazy"
+                    className="h-full  object-contain transition-transform duration-300 hover:scale-105 w-1/3"
+                  />
+                </div>
+                <Badge
+                  className="absolute top-3 right-3 text-xs"
+                  variant="outline"
+                >
+                  Produto
+                </Badge>
+              </div>
               <p className="text-muted-foreground text-xs md:text-sm">
-                Exemplos de embalagens que podem ser produzidas
+                Exemplo de embalagem que pode ser produzida
               </p>
             </TabsContent>
           </Tabs>
