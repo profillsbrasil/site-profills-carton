@@ -6,8 +6,7 @@
 // - Dark-mode tweaks (Apple Mail / some clients)
 // - Safe HTML escaping for user-provided fields
 // - Optional CTA, address line, and UTM on links
-
-import { type QuoteFormData } from "./formEmail";
+import { type QuoteFormData } from './formEmail';
 
 export type EmailItemData = {
   title: string;
@@ -33,26 +32,26 @@ export type RenderOptions = {
 };
 
 const escapeHtml = (input?: string | number | null): string => {
-  if (input === undefined || input === null) return "—";
+  if (input === undefined || input === null) return '—';
   const str = String(input);
   return (
     str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\"/g, "&quot;")
-      .replace(/'/g, "&#39;")
-      .trim() || "—"
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .trim() || '—'
   );
 };
 
 const telToWhatsapp = (phone: string | undefined): string => {
-  if (!phone) return "";
-  const clean = phone.replace(/\D/g, "");
+  if (!phone) return '';
+  const clean = phone.replace(/\D/g, '');
   const withCountry =
     clean.length === 11
       ? `55${clean}`
-      : clean.startsWith("55")
+      : clean.startsWith('55')
         ? clean
         : `55${clean}`;
   return `https://wa.me/${withCountry}`;
@@ -62,12 +61,12 @@ const withUtm = (url: string, enable?: boolean): string => {
   if (!enable) return url;
   try {
     const u = new URL(url);
-    if (!u.searchParams.get("utm_source"))
-      u.searchParams.set("utm_source", "crm-email");
-    if (!u.searchParams.get("utm_medium"))
-      u.searchParams.set("utm_medium", "transactional");
-    if (!u.searchParams.get("utm_campaign"))
-      u.searchParams.set("utm_campaign", "quote");
+    if (!u.searchParams.get('utm_source'))
+      u.searchParams.set('utm_source', 'crm-email');
+    if (!u.searchParams.get('utm_medium'))
+      u.searchParams.set('utm_medium', 'transactional');
+    if (!u.searchParams.get('utm_campaign'))
+      u.searchParams.set('utm_campaign', 'quote');
     return u.toString();
   } catch {
     return url; // caso não seja URL válida
@@ -76,53 +75,53 @@ const withUtm = (url: string, enable?: boolean): string => {
 
 export function renderEmailHTML(
   data: QuoteFormData,
-  opt: RenderOptions = {},
+  opt: RenderOptions = {}
 ): string {
   const now = new Date();
-  const dateBR = now.toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+  const dateBR = now.toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   });
 
   const {
-    logoCid = "logo",
-    brandName = "Profills Carton",
-    primary = "#2FA34F",
-    text = "#1F2937",
-    mutedText = "#6B7280",
-    border = "#E5E7EB",
-    surface = "#FFFFFF",
-    background = "#F9FAFB",
-    supportEmail = "site.profills.carton@gmail.com",
-    siteUrl = "https://profills-carton.com",
+    logoCid = 'logo',
+    brandName = 'Profills Carton',
+    primary = '#2FA34F',
+    text = '#1F2937',
+    mutedText = '#6B7280',
+    border = '#E5E7EB',
+    surface = '#FFFFFF',
+    background = '#F9FAFB',
+    supportEmail = 'site.profills.carton@gmail.com',
+    siteUrl = 'https://profills-carton.com',
     ctaUrl,
-    ctaLabel = "Ver no CRM",
+    ctaLabel = 'Ver no CRM',
     addressLine,
-    addUtm = true,
+    addUtm = true
   } = opt;
 
   const previewText = `Nova cotação: ${escapeHtml(data.machineTitle)} - ${escapeHtml(data.name)}`;
 
-  const buttonHref = ctaUrl ? withUtm(ctaUrl, addUtm) : "";
+  const buttonHref = ctaUrl ? withUtm(ctaUrl, addUtm) : '';
 
   // Styles centralizados para consistência
   const baseFont =
-    "font-family: Inter, -apple-system, Segoe UI, Roboto, Arial, sans-serif;";
-  const containerShadow = "box-shadow:0 4px 24px rgba(0,0,0,0.08)";
+    'font-family: Inter, -apple-system, Segoe UI, Roboto, Arial, sans-serif;';
+  const containerShadow = 'box-shadow:0 4px 24px rgba(0,0,0,0.08)';
 
   // Bulletproof button (inclui VML para Outlook)
   const ctaButton = ctaUrl
     ? `
       <!--[if mso]>
       <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(
-        buttonHref,
+        buttonHref
       )}" style="height:44px;v-text-anchor:middle;width:200px;" arcsize="12%" stroke="f" fillcolor="${primary}">
         <w:anchorlock/>
         <center style="color:#FFFFFF;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;">${escapeHtml(
-          ctaLabel,
+          ctaLabel
         )}</center>
       </v:roundrect>
       <![endif]-->
@@ -133,7 +132,7 @@ export function renderEmailHTML(
       </a>
       <!--<![endif]-->
     `
-    : "";
+    : '';
 
   // 3 colunas de especificações (caem para 1 col no mobile)
   const specs = `
@@ -141,26 +140,26 @@ export function renderEmailHTML(
       <tr>
         ${[
           {
-            label: "Capacidade",
-            value: `${escapeHtml(data.machineCapacity)} ${escapeHtml(data.machineCapacityUnit)}`,
+            label: 'Capacidade',
+            value: `${escapeHtml(data.machineCapacity)} ${escapeHtml(data.machineCapacityUnit)}`
           },
           {
-            label: "Potência",
-            value: `${escapeHtml(data.machinePowerConsumption)}kW`,
+            label: 'Potência',
+            value: `${escapeHtml(data.machinePowerConsumption)}kW`
           },
           {
-            label: "Área",
-            value: `${escapeHtml(data.machineFootprint)}`,
-          },
+            label: 'Área',
+            value: `${escapeHtml(data.machineFootprint)}`
+          }
         ]
           .map(
             (s) => `
           <td align="center" valign="top" width="33%" style="background:${surface};border:1px solid ${border};border-radius:8px;padding:12px;">
             <div style="${baseFont} color:${primary};font-weight:800;font-size:15px;line-height:1.2;">${s.value}</div>
             <div style="${baseFont} color:${mutedText};font-size:12px;line-height:1.4;margin-top:4px;">${s.label}</div>
-          </td>`,
+          </td>`
           )
-          .join("")}
+          .join('')}
       </tr>
     </table>
   `;
@@ -219,7 +218,7 @@ export function renderEmailHTML(
                   <td width="50%" style="vertical-align:top;padding-left:10px;">
                     <div style="${baseFont} color:${mutedText};font-size:12px;margin-bottom:4px;">Contato</div>
                     <div style="${baseFont} color:${text};font-size:16px;font-weight:700;">${escapeHtml(data.name)}</div>
-                    <div style="${baseFont} color:${mutedText};font-size:13px;margin-top:4px;">${escapeHtml(data.company || "Não informado")}</div>
+                    <div style="${baseFont} color:${mutedText};font-size:13px;margin-top:4px;">${escapeHtml(data.company || 'Não informado')}</div>
                   </td>
                 </tr>
               </table>
@@ -244,21 +243,21 @@ export function renderEmailHTML(
                     <div style="${baseFont} font-weight:600;color:${text};font-size:14px;">Nome</div>
                     <div style="${baseFont} color:${mutedText};font-size:14px;margin:4px 0 12px;">${escapeHtml(data.name)}</div>
                     <div style="${baseFont} font-weight:600;color:${text};font-size:14px;">Empresa</div>
-                    <div style="${baseFont} color:${mutedText};font-size:14px;margin:4px 0 12px;">${escapeHtml(data.company || "Não informado")}</div>
+                    <div style="${baseFont} color:${mutedText};font-size:14px;margin:4px 0 12px;">${escapeHtml(data.company || 'Não informado')}</div>
                   </td>
                   <td width="50%" style="vertical-align:top;padding-left:10px;">
                     <div style="${baseFont} font-weight:600;color:${text};font-size:14px;">E-mail</div>
                     <div style="${baseFont} font-size:14px;margin:4px 0 12px;"><a href="mailto:${escapeHtml(
-                      data.email,
+                      data.email
                     )}" style="color:${primary};text-decoration:none;">${escapeHtml(data.email)}</a></div>
                     <div style="${baseFont} font-weight:600;color:${text};font-size:14px;">Telefone</div>
                     <div style="${baseFont} font-size:14px;margin:4px 0 12px;"><a href="${escapeHtml(
-                      telToWhatsapp(data.phone),
+                      telToWhatsapp(data.phone)
                     )}" target="_blank" style="color:${primary};text-decoration:none;">${escapeHtml(data.phone)}</a></div>
                   </td>
                 </tr>
               </table>
-              ${ctaButton ? `<div class="center" style="margin-top:8px;">${ctaButton}</div>` : ""}
+              ${ctaButton ? `<div class="center" style="margin-top:8px;">${ctaButton}</div>` : ''}
             </td>
           </tr>
 
@@ -270,30 +269,30 @@ export function renderEmailHTML(
             <td class="px" style="padding:20px;border-bottom:1px solid ${border};">
               <h2 style="${baseFont} font-size:16px;line-height:1.3;margin:0 0 8px;color:${text};font-weight:800;">Mensagem do Cliente</h2>
               <div style="${baseFont} color:${mutedText};font-size:14px;line-height:1.6;background:${background};border:1px solid ${border};border-radius:8px;padding:12px;">${escapeHtml(
-                data.message,
+                data.message
               )}</div>
             </td>
           </tr>
           `
-              : ""
+              : ''
           }
 
           <!-- Footer -->
           <tr>
             <td align="center" style="padding:20px;background:${background};">
               <div style="${baseFont} color:${text};font-weight:700;font-size:15px;margin-bottom:4px;">${escapeHtml(
-                brandName,
+                brandName
               )}</div>
               <div style="${baseFont} color:${mutedText};font-size:13px;margin-bottom:12px;">Soluções Profissionais em Embalagens</div>
               <div style="${baseFont} color:${mutedText};font-size:12px;line-height:1.6;">
                 <a href="mailto:${escapeHtml(
-                  supportEmail,
+                  supportEmail
                 )}" style="color:${primary};text-decoration:none;">${escapeHtml(
-                  supportEmail,
+                  supportEmail
                 )}</a><br/>
                 <a href="${escapeHtml(siteUrl)}" style="color:${primary};text-decoration:none;">${escapeHtml(
-                  siteUrl.replace(/^https?:\/\//, ""),
-                )}</a>${addressLine ? `<br/>${escapeHtml(addressLine)}` : ""}
+                  siteUrl.replace(/^https?:\/\//, '')
+                )}</a>${addressLine ? `<br/>${escapeHtml(addressLine)}` : ''}
               </div>
               <div style="${baseFont} color:${mutedText};font-size:11px;margin-top:12px;padding-top:12px;border-top:1px solid ${border};">E-mail gerado automaticamente pelo sistema de cotações</div>
             </td>
@@ -311,11 +310,11 @@ export function renderEmailHTML(
 
 export function renderEmailText(
   data: QuoteFormData,
-  brand = "Profills Carton",
+  brand = 'Profills Carton'
 ): string {
   const safe = (v?: string | number | null) =>
-    v === undefined || v === null ? "—" : String(v).trim() || "—";
-  const now = new Date().toLocaleString("pt-BR");
+    v === undefined || v === null ? '—' : String(v).trim() || '—';
+  const now = new Date().toLocaleString('pt-BR');
 
   return (
     `${brand} - Nova Cotação\n\n` +
@@ -327,10 +326,10 @@ export function renderEmailText(
     `Área: ${safe(data.machineFootprint)}\n\n` +
     `CLIENTE:\n` +
     `Nome: ${safe(data.name)}\n` +
-    `Empresa: ${safe(data.company) || "Não informado"}\n` +
+    `Empresa: ${safe(data.company) || 'Não informado'}\n` +
     `E-mail: ${safe(data.email)}\n` +
     `Telefone: ${safe(data.phone)}\n` +
-    `${data.message ? `Mensagem: ${safe(data.message)}\n` : ""}\n` +
+    `${data.message ? `Mensagem: ${safe(data.message)}\n` : ''}\n` +
     `Data: ${now}\n` +
     `ID: ${safe(data.machineId)}`
   );

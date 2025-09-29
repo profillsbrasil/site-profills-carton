@@ -1,38 +1,41 @@
-import type React from "react";
-import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
-import "./globals.css";
-import Footer from "@/components/footer";
-import { Toaster } from "@/components/ui/sonner";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import type React from 'react';
+
+import type { Metadata } from 'next';
+import { Inter, Poppins } from 'next/font/google';
+
+import Footer from '@/components/footer';
+import { Toaster } from '@/components/ui/sonner';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
+import './globals.css';
 
 const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+  variable: '--font-inter',
+  subsets: ['latin']
 });
 
 const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  variable: '--font-poppins',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700']
 });
 
 export const metadata: Metadata = {
-  title: "Profills Cartons",
+  title: 'Profills Cartons',
   description:
-    "Líder em tecnologia de maquinário para produção de embalagens biodegradáveis e sustentáveis.",
+    'Líder em tecnologia de maquinário para produção de embalagens biodegradáveis e sustentáveis.',
   icons: {
-    icon: "/favicon.ico",
-  },
+    icon: '/favicon.ico'
+  }
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang='pt-BR' suppressHydrationWarning>
       <head>
         <style>{`
           html {
@@ -43,8 +46,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${inter.variable} ${poppins.variable} font-sans antialiased`}
-        suppressHydrationWarning
-      >
+        suppressHydrationWarning>
         {children}
         <Footer />
         <Toaster />

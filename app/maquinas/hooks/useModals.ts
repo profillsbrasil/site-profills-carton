@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { type StaticImageData } from "next/image";
-import { type MachineData } from "../data/machines-data";
+import { useState } from 'react';
+
+import { type StaticImageData } from 'next/image';
+
+import { type MachineData } from '../data/machines-data';
 
 export function useModals() {
   // Estado dos modais
@@ -58,16 +60,16 @@ export function useModals() {
     // Handlers
     quote: {
       open: openQuoteModal,
-      close: closeQuoteModal,
+      close: closeQuoteModal
     },
 
     image: {
       open: openImageDialog,
-      close: closeImageDialog,
+      close: closeImageDialog
     },
     calculator: {
       open: openCalculator,
-      close: closeCalculator,
-    },
+      close: closeCalculator
+    }
   };
 }
