@@ -49,14 +49,7 @@ const services = [
 
 export default function Footer() {
   return (
-    <footer className='relative overflow-hidden border-t bg-gradient-to-br from-white to-slate-50/50'>
-      {/* Elementos de fundo decorativos */}
-      <div className='absolute inset-0 overflow-hidden'>
-        <div className='bg-primary/5 absolute -bottom-48 -left-24 h-96 w-96 rounded-full blur-3xl'></div>
-        <div className='bg-secondary/5 absolute -top-24 -right-32 h-80 w-80 rounded-full blur-3xl'></div>
-        <div className='bg-primary/3 absolute right-1/4 bottom-1/3 h-64 w-64 rounded-full blur-3xl'></div>
-      </div>
-
+    <footer className='relative overflow-hidden border-t bg-white'>
       <div className='absolute top-0 right-0 w-full'>
         <Image
           src={treeFooter}
@@ -84,7 +77,7 @@ export default function Footer() {
           <div className='flex flex-row px-5 md:w-2/3'>
             {/* Produtos */}
             <div className='flex-1'>
-              <h3 className='text-primary mb-3 text-base font-semibold md:mb-4 md:text-lg'>
+              <h3 className='text-foreground mb-3 text-base font-semibold md:mb-4 md:text-lg'>
                 Produtos
               </h3>
               <div className='flex flex-col gap-2 md:gap-3'>
@@ -103,7 +96,7 @@ export default function Footer() {
 
             {/* Serviços */}
             <div className='flex-1'>
-              <h3 className='text-primary mb-3 text-right text-base font-semibold md:mb-4 md:text-left md:text-lg'>
+              <h3 className='text-foreground mb-3 text-right text-base font-semibold md:mb-4 md:text-left md:text-lg'>
                 Serviços
               </h3>
               <div className='flex flex-col gap-2 md:gap-3'>
@@ -126,7 +119,7 @@ export default function Footer() {
 
           {/* Contato Rápido - Minimalista */}
           <div className='flex-1'>
-            <h3 className='text-primary mb-3 hidden text-base font-semibold md:mb-4 md:block md:text-lg'>
+            <h3 className='text-foreground mb-3 hidden text-base font-semibold md:mb-4 md:block md:text-lg'>
               Contato
             </h3>
             <div className='flex flex-col gap-2 md:gap-3'>
@@ -134,7 +127,7 @@ export default function Footer() {
                 href='https://www.instagram.com/profillscarton/'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='bg-muted/30 group hover:bg-muted/50 block cursor-pointer rounded-md border border-white/20 px-3 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md md:px-4 md:py-3'>
+                className='bg-muted/30 group hover:bg-muted/50 block rounded-md border border-border/40 px-3 py-2.5 transition-all duration-300 hover:shadow-sm md:px-4 md:py-3'>
                 <div className='flex items-center gap-3'>
                   <div className='bg-primary/10 group-hover:bg-primary/20 flex h-8 w-8 items-center justify-center rounded-md transition-colors'>
                     <Instagram className='text-primary h-4 w-4' />
@@ -150,7 +143,7 @@ export default function Footer() {
 
               <Link
                 href='mailto:contato@profillscarton.com'
-                className='bg-muted/30 group hover:bg-muted/50 block cursor-pointer rounded-md border border-white/20 px-3 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md md:px-4 md:py-3'>
+                className='bg-muted/30 group hover:bg-muted/50 block rounded-md border border-border/40 px-3 py-2.5 transition-all duration-300 hover:shadow-sm md:px-4 md:py-3'>
                 <div className='flex items-center gap-3'>
                   <div className='bg-primary/10 group-hover:bg-primary/20 flex h-8 w-8 items-center justify-center rounded-md transition-colors'>
                     <Mail className='text-primary h-4 w-4' />
@@ -172,7 +165,7 @@ export default function Footer() {
         {/* Footer Bottom Minimalista */}
         <div className='border-primary/20 border-t py-5 text-center md:py-8'>
           <p className='text-primary flex flex-col items-center justify-center text-xs md:flex-row md:text-sm'>
-            © 2025 Profills Carton. <span>Todos os direitos reservados.</span>
+            © {new Date().getFullYear()} Profills Carton. <span>Todos os direitos reservados.</span>
           </p>
         </div>
       </div>

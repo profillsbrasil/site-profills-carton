@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,17 +20,60 @@ import {
 import { Menu, Phone, X } from 'lucide-react';
 
 const links = [
-  { href: '/', label: 'Início' },
-  { href: '/#about', label: 'Sobre' },
-  { href: '/#products', label: 'Produtos' },
-  { href: '/maquinas', label: 'Máquinas' }
+  { href: '/', label: 'Início', sectionId: '' },
+  { href: '/#about', label: 'Sobre', sectionId: 'about' },
+  { href: '/#products', label: 'Produtos', sectionId: 'products' },
+  { href: '/maquinas', label: 'Máquinas', sectionId: '' }
 ];
 
 export default function NavbarHome() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+
+  useEffect(() => {
+    const sectionIds = ['about', 'products'];
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveSection(id);
+          }
+        },
+        { rootMargin: '-40% 0px -40% 0px', threshold: 0 }
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    const handleScroll = () => {
+      if (window.scrollY < 200) {
+        setActiveSection('');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observers.forEach((obs) => obs.disconnect());
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const isActive = (link: (typeof links)[number]) => {
+    if (link.sectionId === '' && link.href === '/') {
+      return activeSection === '';
+    }
+    return link.sectionId === activeSection;
+  };
 
   return (
-    <nav className='border-border bg-background sticky top-0 z-50 h-[8vh] w-full border-y backdrop-blur-md'>
+    <nav className='border-border bg-background/80 sticky top-0 z-50 h-[8vh] w-full border-y backdrop-blur-md'>
       <div className='mx-auto h-full w-full max-w-7xl px-4 md:px-6'>
         <div className='flex h-full items-center justify-center md:justify-between'>
           {/* Logo */}
@@ -55,14 +98,18 @@ export default function NavbarHome() {
                   key={link.label}
                   className='group relative px-4 py-2 text-sm font-medium transition-all duration-200'>
                   <span
-                    className={`group-hover:text-primary transition-colors duration-200 ${
-                      link.href === '/'
-                        ? 'text-foreground'
-                        : 'text-muted-foreground'
+                    className={`transition-colors duration-200 ${
+                      isActive(link)
+                        ? 'text-primary'
+                        : 'text-muted-foreground group-hover:text-primary'
                     }`}>
                     {link.label}
                   </span>
-                  <div className='bg-primary/80 absolute bottom-0 left-0 h-[0.09rem] w-0 transition-all duration-200 group-hover:w-full' />
+                  <div
+                    className={`bg-primary/80 absolute bottom-0 left-0 h-[0.09rem] transition-all duration-300 ${
+                      isActive(link) ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}
+                  />
                 </Link>
               ))}
             </div>
@@ -128,12 +175,18 @@ export default function NavbarHome() {
                       <Link
                         href={link.href}
                         className='group hover:bg-muted/50 flex items-center rounded-lg px-3 py-4 text-base font-medium transition-all duration-200'>
-                        <div className='bg-primary mr-3 h-1.5 w-1.5 rounded-full opacity-0 transition-all duration-200 group-hover:scale-125 group-hover:opacity-100' />
+                        <div
+                          className={`mr-3 h-1.5 w-1.5 rounded-full transition-all duration-200 ${
+                            isActive(link)
+                              ? 'bg-primary scale-125 opacity-100'
+                              : 'bg-primary opacity-0 group-hover:scale-125 group-hover:opacity-100'
+                          }`}
+                        />
                         <span
-                          className={`group-hover:text-primary transition-colors duration-200 ${
-                            link.href === '/'
-                              ? 'text-foreground'
-                              : 'text-muted-foreground'
+                          className={`transition-colors duration-200 ${
+                            isActive(link)
+                              ? 'text-primary'
+                              : 'text-muted-foreground group-hover:text-primary'
                           }`}>
                           {link.label}
                         </span>

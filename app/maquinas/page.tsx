@@ -52,7 +52,7 @@ export default function Maquinas() {
                   />
                 </div>
 
-                <h1 className='from-primary to-secondary mb-3 bg-gradient-to-r bg-clip-text text-2xl leading-tight font-bold text-transparent md:mb-6 md:text-6xl'>
+                <h1 className='text-foreground mb-3 font-serif text-2xl leading-tight font-bold tracking-tight md:mb-6 md:text-6xl'>
                   Linha Completa de Máquinas
                 </h1>
 

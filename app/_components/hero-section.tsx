@@ -38,30 +38,26 @@ export default function HeroSection() {
 
       {/* Top marquee banner */}
       <div className='bg-primary absolute top-0 left-0 z-10 flex h-8 w-full items-center justify-center text-white'>
-        <Marquee className='flex items-center justify-center text-xs font-semibold'>
-          <span className='flex h-full w-fit items-center justify-center'>
-            <Circle className='w-2' />
+        <Marquee className='flex items-center text-xs font-semibold tracking-wide'>
+          <span className='flex items-center gap-3 uppercase'>
+            <Circle className='h-1.5 w-1.5 fill-current' />
+            Embalagens Cartonadas
           </span>
-          <span className='flex items-center justify-center uppercase'>
-            Envasadora
+          <span className='flex items-center gap-3 uppercase'>
+            <Circle className='h-1.5 w-1.5 fill-current' />
+            Bisnagas
           </span>
-          <span className='flex items-center justify-center uppercase'>
-            para
+          <span className='flex items-center gap-3 uppercase'>
+            <Circle className='h-1.5 w-1.5 fill-current' />
+            Stand-Up Pouch
           </span>
-          <span className='flex items-center justify-center uppercase'>
-            embalagens
+          <span className='flex items-center gap-3 uppercase'>
+            <Circle className='h-1.5 w-1.5 fill-current' />
+            Potes
           </span>
-          <span className='flex items-center justify-center uppercase'>
-            cartonadas
-          </span>
-          <span className='flex items-center justify-center uppercase'>
-            bisnagas
-          </span>
-          <span className='flex items-center justify-center uppercase'>
-            pouchs
-          </span>
-          <span className='flex items-center justify-center uppercase'>
-            potes
+          <span className='flex items-center gap-3 uppercase'>
+            <Circle className='h-1.5 w-1.5 fill-current' />
+            Mini Pouch
           </span>
         </Marquee>
       </div>
@@ -72,9 +68,9 @@ export default function HeroSection() {
           {/* Content section */}
           <div className='flex w-full flex-col gap-6 text-center md:w-1/2 md:gap-8 md:text-left'>
             <div className='w-full'>
-              <h1 className='mb-6 font-serif text-3xl leading-tight font-bold md:mb-8 md:text-6xl md:leading-14'>
+              <h1 className='mb-6 font-serif text-3xl leading-tight font-bold tracking-tight md:mb-8 md:text-6xl md:leading-14'>
                 <BoxReveal boxColor={'#45ad4a'} duration={0.5}>
-                  <span>Construindo um</span>
+                  <span className='text-foreground'>Construindo um</span>
                 </BoxReveal>
                 <BoxReveal boxColor={'#45ad4a'} duration={0.5}>
                   <span className='from-primary to-primary/60 block bg-gradient-to-r bg-clip-text text-transparent'>
@@ -84,9 +80,9 @@ export default function HeroSection() {
               </h1>
               <BoxReveal boxColor={'#45ad4a'} duration={0.5}>
                 <p className='text-muted-foreground mx-auto max-w-xl text-left text-base leading-relaxed md:mx-0 md:text-lg'>
-                  Soluções inovadoras em processamento e envase para porções na
-                  medida certa, garantindo qualidade, equilíbrio e
-                  acessibilidade para todos.
+                  Máquinas envasadoras de alta performance para embalagens
+                  cartonadas, pouches, bisnagas e potes. Tecnologia brasileira
+                  com presença em mais de 10 países.
                 </p>
               </BoxReveal>
             </div>
@@ -107,16 +103,13 @@ export default function HeroSection() {
           <div className='flex w-full items-center justify-center md:w-1/2'>
             {/* Mobile: Single featured image */}
             <div className='block w-full max-w-sm md:hidden'>
-              <div className='relative'>
-                <div className='from-primary/20 to-secondary/20 absolute -inset-4 rounded-full bg-gradient-to-r blur-xl'></div>
-                <Image
-                  src={image1}
-                  loading='eager'
-                  alt='Máquina Profills para produção de embalagens sustentáveis'
-                  className='relative z-10 h-auto w-full rounded-lg object-contain drop-shadow-2xl'
-                  priority
-                />
-              </div>
+              <Image
+                src={image1}
+                loading='eager'
+                alt='Máquina Profills para produção de embalagens sustentáveis'
+                className='h-auto w-full object-contain drop-shadow-2xl'
+                priority
+              />
             </div>
 
             {/* Desktop: Full carousel */}

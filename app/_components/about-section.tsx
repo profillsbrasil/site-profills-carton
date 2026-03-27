@@ -1,9 +1,8 @@
 import Image from 'next/image';
 
 import raiz from '@/assets/image/raizes.png';
-import { Card, CardContent } from '@/components/ui/card';
 
-import { Eye, Globe2, Handshake, MapPin, Recycle, Target } from 'lucide-react';
+import { Eye, Handshake, Recycle, Target } from 'lucide-react';
 
 export default function AboutSection() {
   return (
@@ -14,13 +13,13 @@ export default function AboutSection() {
         <Image
           src={raiz}
           alt='Arvore'
-          loading='eager'
+          loading='lazy'
           className='h-full w-full scale-110 rotate-20 opacity-5'
         />
       </div>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='mb-12 text-center'>
-          <h2 className='from-primary to-primary/60 mb-3 block bg-gradient-to-r bg-clip-text font-serif text-3xl font-bold text-transparent md:text-4xl'>
+          <h2 className='text-foreground mb-3 font-serif text-3xl font-bold tracking-tight md:text-4xl'>
             Quem Somos
           </h2>
           <p className='text-muted-foreground mx-auto max-w-3xl text-base leading-relaxed md:text-lg'>
@@ -31,77 +30,55 @@ export default function AboutSection() {
           </p>
         </div>
 
-        <div className='mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
-          <Card className='group border-border/60 relative transition-all duration-300 hover:-translate-y-1 hover:shadow-lg'>
-            <div className='pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-              <div className='from-primary/10 absolute -inset-1 rounded-md bg-gradient-to-br to-transparent blur' />
+        <div className='mb-12 grid gap-8 md:grid-cols-2'>
+          <div className='border-primary/30 border-l-2 pl-6'>
+            <div className='mb-2 flex items-center gap-3'>
+              <Target className='text-primary h-5 w-5' />
+              <h3 className='text-lg font-semibold'>Missão</h3>
             </div>
-            <CardContent className='p-6 text-center'>
-              <div className='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110'>
-                <Target className='text-primary h-8 w-8' />
-              </div>
-              <h3 className='mb-2 text-lg font-semibold'>Missão</h3>
-              <p className='text-muted-foreground text-sm'>
-                Embalar o mundo com tecnologia, qualidade e responsabilidade.
-              </p>
-            </CardContent>
-          </Card>
+            <p className='text-muted-foreground text-sm leading-relaxed'>
+              Embalar o mundo com tecnologia, qualidade e responsabilidade.
+            </p>
+          </div>
 
-          <Card className='group border-border/60 relative transition-all duration-300 hover:-translate-y-1 hover:shadow-lg'>
-            <div className='pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-              <div className='from-primary/10 absolute -inset-1 rounded-md bg-gradient-to-br to-transparent blur' />
+          <div className='border-primary/30 border-l-2 pl-6'>
+            <div className='mb-2 flex items-center gap-3'>
+              <Eye className='text-primary h-5 w-5' />
+              <h3 className='text-lg font-semibold'>Visão</h3>
             </div>
-            <CardContent className='p-6 text-center'>
-              <div className='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110'>
-                <Eye className='text-primary h-8 w-8' />
-              </div>
-              <h3 className='mb-2 text-lg font-semibold'>Visão</h3>
-              <p className='text-muted-foreground text-sm'>
-                Ser referência em confiança e inovação, presente em todas as
-                gôndolas do mercado.
-              </p>
-            </CardContent>
-          </Card>
+            <p className='text-muted-foreground text-sm leading-relaxed'>
+              Ser referência em confiança e inovação, presente em todas as
+              gôndolas do mercado.
+            </p>
+          </div>
 
-          <Card className='group border-border/60 relative transition-all duration-300 hover:-translate-y-1 hover:shadow-lg'>
-            <div className='pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-              <div className='from-primary/10 absolute -inset-1 rounded-md bg-gradient-to-br to-transparent blur' />
+          <div className='border-primary/30 border-l-2 pl-6'>
+            <div className='mb-2 flex items-center gap-3'>
+              <Handshake className='text-primary h-5 w-5' />
+              <h3 className='text-lg font-semibold'>Valores</h3>
             </div>
-            <CardContent className='p-6 text-center'>
-              <div className='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110'>
-                <Handshake className='text-primary h-8 w-8' />
-              </div>
-              <h3 className='mb-2 text-lg font-semibold'>Valores</h3>
-              <p className='text-muted-foreground text-sm'>
-                Qualidade, confiança, segurança, valorização das pessoas e
-                proteção dos recursos sociais, ambientais e econômicos.
-              </p>
-            </CardContent>
-          </Card>
+            <p className='text-muted-foreground text-sm leading-relaxed'>
+              Qualidade, confiança, segurança, valorização das pessoas e
+              proteção dos recursos sociais, ambientais e econômicos.
+            </p>
+          </div>
 
-          <Card className='group border-border/60 relative transition-all duration-300 hover:-translate-y-1 hover:shadow-lg'>
-            <div className='pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-              <div className='from-primary/10 absolute -inset-1 rounded-md bg-gradient-to-br to-transparent blur' />
+          <div className='border-primary/30 border-l-2 pl-6'>
+            <div className='mb-2 flex items-center gap-3'>
+              <Recycle className='text-primary h-5 w-5' />
+              <h3 className='text-lg font-semibold'>Compromisso</h3>
             </div>
-            <CardContent className='p-6 text-center'>
-              <div className='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110'>
-                <Recycle className='text-primary h-8 w-8' />
-              </div>
-              <h3 className='text-foreground mb-2 text-lg font-semibold'>
-                Compromisso
-              </h3>
-              <p className='text-muted-foreground text-sm'>
-                Sustentabilidade e combate ao desperdício por meio de soluções
-                de processamento e envase inteligentes.
-              </p>
-            </CardContent>
-          </Card>
+            <p className='text-muted-foreground text-sm leading-relaxed'>
+              Sustentabilidade e combate ao desperdício por meio de soluções
+              de processamento e envase inteligentes.
+            </p>
+          </div>
         </div>
 
         <div className='rounded-md border bg-white p-8'>
           <div className='grid items-center gap-8 lg:grid-cols-2'>
             <div>
-              <h3 className='from-primary to-primary/60 mb-4 block bg-gradient-to-r bg-clip-text text-center font-serif text-2xl font-bold text-transparent md:text-left'>
+              <h3 className='text-foreground mb-4 text-center font-serif text-2xl font-bold tracking-tight md:text-left'>
                 Nossa História
               </h3>
               <p className='text-muted-foreground mb-4 leading-relaxed'>
@@ -117,42 +94,22 @@ export default function AboutSection() {
                 capacitação.
               </p>
             </div>
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='group border-border/60 bg-muted/30 hover:bg-primary/10 rounded-lg border p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-sm'>
-                <div className='text-primary mb-1 text-sm font-medium'>
-                  Desde
-                </div>
-                <div className='mb-1 text-2xl font-bold'>2013</div>
-                <div className='text-muted-foreground text-xs'>
-                  Ano de fundação
-                </div>
+            <div className='flex flex-wrap items-center justify-center gap-6 pt-4 md:justify-start md:gap-0 md:divide-x md:divide-border'>
+              <div className='text-center md:pr-8'>
+                <div className='text-foreground text-3xl font-bold'>2013</div>
+                <div className='text-muted-foreground text-xs'>Fundação</div>
               </div>
-              <div className='group border-border/60 bg-muted/30 hover:bg-primary/10 rounded-lg border p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-sm'>
-                <div className='text-primary mb-1 text-sm font-medium'>
-                  Equipe
-                </div>
-                <div className='mb-1 text-2xl font-bold'>100+</div>
-                <div className='text-muted-foreground text-xs'>
-                  Colaboradores diretos
-                </div>
+              <div className='text-center md:px-8'>
+                <div className='text-foreground text-3xl font-bold'>100+</div>
+                <div className='text-muted-foreground text-xs'>Colaboradores</div>
               </div>
-              <div className='group border-border/60 bg-muted/30 hover:bg-primary/10 rounded-lg border p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-sm'>
-                <div className='mx-auto mb-1 flex h-6 w-6 items-center justify-center'>
-                  <MapPin className='text-primary h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5' />
-                </div>
-                <div className='mb-1 text-2xl font-bold'>3</div>
-                <div className='text-muted-foreground text-xs'>
-                  Unidades no Brasil
-                </div>
+              <div className='text-center md:px-8'>
+                <div className='text-foreground text-3xl font-bold'>3</div>
+                <div className='text-muted-foreground text-xs'>Unidades no Brasil</div>
               </div>
-              <div className='group border-border/60 bg-muted/30 hover:bg-primary/10 rounded-lg border p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-sm'>
-                <div className='mx-auto mb-1 flex h-6 w-6 items-center justify-center'>
-                  <Globe2 className='text-primary h-5 w-5 transition-transform duration-300 group-hover:scale-110' />
-                </div>
-                <div className='mb-1 text-2xl font-bold'>10+</div>
-                <div className='text-muted-foreground text-xs'>
-                  Presença internacional
-                </div>
+              <div className='text-center md:pl-8'>
+                <div className='text-foreground text-3xl font-bold'>10+</div>
+                <div className='text-muted-foreground text-xs'>Países atendidos</div>
               </div>
             </div>
           </div>
